@@ -38,26 +38,19 @@ const MORSE_TABLE = {
 };
 
 function decode(expr) {
-    let arr2 = [];
-    let result = '';
-    let dotDash = '';
-    let str10 = '';
-    let arr10 = expr.split('', 10);
-    for (let i = 0; i < arr10.length; i++) {
-        str10 = arr10[i];
-        while (str10[0] === '0') {
-        str10.split(1);
-        }
-        arr2 = arr10[i].split('',2);
-        for (let k = 0; k < arr2.length; k++) {
-            if (arr2[i] === '10') {
-                dotDash += '.';
-            } else if (arr2[i] === '11') {
-                dotDash += '-';
-            }
-        }
-        result += MORSE_TABLE[dotDash];
-    }
+	let ten = /.{10}/g
+    const tenBytes = expr.match(ten);
+    let result = tenBytes.map(tenByte => {
+        if(tenByte=='**********')
+            return ' ';
+		let two = /.{2}/g
+        const twoBytes = tenByte.match(two);
+        let morseCode = twoBytes.map(e=>{
+            return e=='10'?'.':e=='11'?'-':'';
+        })
+		let res = MORSE_TABLE[morseCode.join('')]
+        return res;
+    }).join('');
     return result;
 }
 
